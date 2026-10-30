@@ -105,7 +105,10 @@
       for (let i = 0; i < 3; i++) {
         game.gems.push({
           x: game.player.x + 65 + i * 42,
-          y: game.ground - 58 - Math.random() * 60,
+          y: -90 - Math.random() * 160,
+          landingY: game.ground - 55 - Math.random() * 45,
+          vy: 1.5 + Math.random() * 2,
+          falling: true,
           got: false,
           phase: Math.random() * 6,
           rush: true
