@@ -17,7 +17,7 @@ No installation or wallet is required. Progress is saved locally in your browser
 - **Shift** — Dash
 - **P** — Pause
 
-Collect crystals, avoid cave hazards and enemies, and upgrade your mining colony.
+Explore an endlessly generated cave, collect crystals, avoid hazards and enemies, and upgrade your mining colony. Runs end when all three lives are lost; distance is tracked as a personal best.
 
 ## SQK and blockchain transparency
 
@@ -58,7 +58,7 @@ Created by **[@defsnotneo](https://x.com/defsnotneo)**.
 
 ## Crystal Rush v0.2 testing notes
 
-The v0.2 feature branch polls the official Sepolia `/v1/measurement/blocks` endpoint every 15 seconds. The first successful reading establishes a baseline; it does not trigger a shower. When new accepted provisional Squeek blocks cross a multiple of 10, the game starts a 20-second Crystal Rush during active gameplay, spawning additional crystals worth 2× while the event is active. The UI displays the network block height, the next milestone, and a rush countdown.
+The v0.2 feature branch polls the official Sepolia `/v1/measurement/blocks` endpoint every 15 seconds. The first successful reading establishes a baseline; it does not trigger a shower. When new accepted provisional Squeek blocks cross a multiple of 10, the endless cave starts a 20-second Crystal Rush during active gameplay, spawning additional crystals worth 2× while the event is active. The UI displays the network block height, the next milestone, and a rush countdown.
 
 Provisional blocks are **not yet settled on Ethereum** and can differ from final on-chain state. API outages disable new events without stopping the platformer. This is testnet gameplay integration only: all SQK shown in-game remains simulated.
 
