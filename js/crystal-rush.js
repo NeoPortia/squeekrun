@@ -11,6 +11,10 @@
   const EVERY_BLOCKS = 10;
   const hud = document.getElementById('rush-status');
   const banner = document.getElementById('rush-banner');
+  const dot = document.getElementById('chain-dot');
+  const meta = document.getElementById('chain-meta');
+  const progress = document.getElementById('chain-progress');
+  const strip = document.getElementById('chain-strip');
 
   let lastHeight = null;
   let activeUntil = 0;
@@ -18,12 +22,24 @@
   let status = 'Connecting to Squeekchain Sepolia…';
   let pendingHeight = null;
   let wasPlaying = false;
+  let connected = false;
+  let lastChecked = 0;
+  let blockProgress = null;
 
   function render() {
     const seconds = Math.ceil(Math.max(0, activeUntil - Date.now()) / 1000);
     hud.textContent = seconds
-      ? '⚡ Crystal Rush: ' + seconds + 's remaining'
+      ? '⚡ Crystal Rush · ' + seconds + 's'
       : status;
+    const age = lastChecked ? Math.floor((Date.now() - lastChecked) / 1000) : null;
+    meta.textContent = age === null ? 'Checking…' : 'Checked ' + age + 's ago';
+    dot.className = 'chain-dot ' + (connected ? 'online' : 'offline');
+    progress.style.width = blockProgress === null ? '0%' :
+      Math.max(0, Math.min(100, blockProgress)).toFixed(1) + '%';
+    strip.title = connected
+      ? 'Squeekchain Sepolia · last checked ' + age + ' seconds ago' +
+        (blockProgress === null ? '' : ' · estimated block progress ' + blockProgress.toFixed(1) + '%')
+      : 'Squeekchain data unavailable; normal gameplay continues';
     banner.hidden = seconds === 0;
     if (seconds) banner.textContent = '⚡ CRYSTAL RUSH · ' + seconds + 's · 2× crystals';
   }
@@ -38,20 +54,27 @@
         throw new Error('Squeekchain measurements unavailable');
       }
 
+      connected = true;
+      // The API reports blockProgress in hundred-millionths of a block.
+      const rawProgress = Number(data.projected.blockProgress);
+      blockProgress = Number.isFinite(rawProgress) ? rawProgress / 1000000 : null;
       const height = BigInt(data.projected.blockHeight);
       if (lastHeight !== null && height > lastHeight &&
           height / BigInt(EVERY_BLOCKS) > lastHeight / BigInt(EVERY_BLOCKS)) {
         pendingHeight = height.toString();
       }
       lastHeight = height;
-      status = '⛓️ Sepolia Squeek block #' + height.toString() +
-        ' · Next rush at #' +
+      status = '⛓️ Block #' + height.toString() +
+        ' · Rush at #' +
         ((height / BigInt(EVERY_BLOCKS) + 1n) * BigInt(EVERY_BLOCKS)).toString();
     } catch (error) {
-      status = '⛓️ Squeekchain offline · Normal gameplay available';
+      connected = false;
+      blockProgress = null;
+      status = '⛓️ Sepolia offline · Play normally';
       // Rebaseline on recovery: no catch-up shower for missed network data.
       lastHeight = null;
     }
+    lastChecked = Date.now();
     render();
   }
 
