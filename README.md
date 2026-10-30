@@ -28,7 +28,7 @@ The mining theme and reward concepts are inspired by [Squeekchain](https://docs.
 ## Roadmap
 
 - **v0.1 — Crystal Caverns:** Initial playable browser game, simulated SQK, colony upgrades, and browser-based saving. **Live.**
-- **v0.2 — Crystal Rush:** Planned Squeekchain Sepolia integration. Detect new Squeekchain blocks and trigger a 20-second bonus crystal shower every 10 blocks. **Not implemented yet.**
+- **v0.2 — Crystal Rush:** Planned Squeekchain Sepolia integration. Detect new Squeekchain blocks and trigger a 20-second bonus crystal shower every 10 blocks. **Implemented on the v0.2 feature branch; awaiting preview testing.**
 - **v0.3 — Visual and audio overhaul:** More expressive full-body hamster, improved animations and UI, and an original nostalgic chiptune soundtrack. **Planned.**
 - **v0.4 — Mobile optimization:** Improve responsive layouts, touchscreen controls, performance, and playability across phones and tablets. **Planned.**
 
@@ -55,3 +55,11 @@ The game will remain playable even when network data is unavailable. Features an
 SqueekRun is an unofficial community project and is not affiliated with or endorsed by the Squeekchain team.
 
 Created by **[@defsnotneo](https://x.com/defsnotneo)**.
+
+## Crystal Rush v0.2 testing notes
+
+The v0.2 feature branch polls the official Sepolia `/v1/measurement/blocks` endpoint every 15 seconds. The first successful reading establishes a baseline; it does not trigger a shower. When new accepted provisional Squeek blocks cross a multiple of 10, the game starts a 20-second Crystal Rush during active gameplay, spawning additional crystals worth 2× while the event is active. The UI displays the network block height, the next milestone, and a rush countdown.
+
+Provisional blocks are **not yet settled on Ethereum** and can differ from final on-chain state. API outages disable new events without stopping the platformer. This is testnet gameplay integration only: all SQK shown in-game remains simulated.
+
+Before release, test network connectivity and event timing on a Vercel preview, keyboard/mobile controls, collection accounting, menu-to-run transitions, and offline fallback.
