@@ -25,6 +25,8 @@
   let connected = false;
   let lastChecked = 0;
   let blockProgress = null;
+  const testMode = new URLSearchParams(location.search).get('rushTest') === '1';
+  let testRequested = false;
 
   function render() {
     const seconds = Math.ceil(Math.max(0, activeUntil - Date.now()) / 1000);
@@ -90,10 +92,11 @@
       // No events queued while a player is in the menu or between runs.
       pendingHeight = null;
     }
-    if (pendingHeight !== null && now >= activeUntil) {
+    if ((pendingHeight !== null || testRequested) && now >= activeUntil) {
       activeUntil = now + RUSH_MS;
       nextSpawn = 0;
       pendingHeight = null;
+      testRequested = false;
     }
     if (now < activeUntil && now >= nextSpawn) {
       nextSpawn = now + 650;
@@ -101,7 +104,7 @@
       // drawing, and collision handling do the rest.
       for (let i = 0; i < 3; i++) {
         game.gems.push({
-          x: Math.min(game.finish - 80, game.player.x + 65 + i * 42),
+          x: game.player.x + 65 + i * 42,
           y: game.ground - 58 - Math.random() * 60,
           got: false,
           phase: Math.random() * 6,
@@ -114,6 +117,21 @@
 
   function crystalValue(gem) {
     return gem.rush && Date.now() < activeUntil ? 2 : 1;
+  }
+
+  // Preview-only test: use ?rushTest=1 and press T during a run.
+  // Never changes network height or simulates an API response.
+  if (testMode) {
+    const hint = document.createElement('span');
+    hint.textContent = ' · TEST: press T in-game';
+    hint.style.color = '#ffd467';
+    hint.style.fontSize = '11px';
+    strip.appendChild(hint);
+    document.addEventListener('keydown', event => {
+      if (event.key.toLowerCase() === 't' && !event.repeat) {
+        testRequested = true;
+      }
+    });
   }
 
   window.SqueekRush = { tick, crystalValue };
