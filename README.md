@@ -30,6 +30,7 @@ The mining theme and reward concepts are inspired by [Squeekchain](https://docs.
 - **v0.1 — Crystal Caverns:** Initial playable browser game, simulated SQK, colony upgrades, and browser-based saving. **Live.**
 - **v0.2 — Crystal Rush:** Planned Squeekchain Sepolia integration. Detect new Squeekchain blocks and trigger a 20-second bonus crystal shower every 10 blocks. **Not implemented yet.**
 - **v0.3 — Visual and audio overhaul:** More expressive full-body hamster, improved animations and UI, and an original nostalgic chiptune soundtrack. **Planned.**
+- **v0.4 — Mobile optimization:** Improve responsive layouts, touchscreen controls, performance, and playability across phones and tablets. **Planned.**
 
 The game will remain playable even when network data is unavailable. Features and release plans may change during development.
 
